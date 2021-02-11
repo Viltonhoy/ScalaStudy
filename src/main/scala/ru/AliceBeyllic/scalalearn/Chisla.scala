@@ -10,8 +10,11 @@ object Chisla {
   }
 
   def crispsWeight(weight: BigDecimal, potatoWaterRatio: Double, crispsWaterRatio: Double): BigDecimal = {
-    val x = (weight * BigDecimal(crispsWaterRatio) / BigDecimal(potatoWaterRatio)).setScale(5, HALF_UP)
-//    val x =(weight - (potatoWaterRatio * weight)) / (1 - crispsWaterRatio)
+    //val x = (weight * BigDecimal(crispsWaterRatio) / BigDecimal(potatoWaterRatio)).setScale(5, HALF_UP)
+    //    val x =(weight - (potatoWaterRatio * weight)) / (1 - crispsWaterRatio)
+    val x = (weight - weight * BigDecimal(potatoWaterRatio))+((weight - weight * BigDecimal(potatoWaterRatio)) *
+      BigDecimal(crispsWaterRatio) / (1 - BigDecimal(crispsWaterRatio))).setScale(5, HALF_UP)
+
     x
   }
 

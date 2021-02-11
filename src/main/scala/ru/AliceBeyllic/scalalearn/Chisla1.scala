@@ -1,8 +1,12 @@
 package ru.AliceBeyllic.scalalearn
 
+import scala.io.StdIn
+
 object Chisla1 {
   def main(args: Array[String]) {
-    val z = edinici(3); println(z)
+    val c = StdIn.readLine().toInt
+    val z = edinici(c)
+    println(z)
   }
 
   def edinici(chislo: Int): Int = {
