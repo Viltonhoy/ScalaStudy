@@ -1,5 +1,7 @@
 package ru.AliceBeyllic.scalalearn
 
+import scala.io.StdIn
+
 object Naval {
 
   type Point = (Int, Int) // Клетка корабля - пара координат этой клетки на поле
@@ -27,6 +29,14 @@ object Lesson {
 object kolekci2_3 {
   def main(args: Array[String]) {
 
+    val vvod = LazyList.continually {
+      StdIn.readLine().split(" ")
+    }.takeWhile(_ != "END").toList
+    println(vvod)
+
+
+
+
     import Naval.{Point, Field, Ship, Fleet, Game}
 
     def validateShip(ship: Ship): Boolean = {
@@ -38,56 +48,52 @@ object kolekci2_3 {
         (coords.last - coords.head) == coords.size - 1
       }
 
-      if (linearOnX) {
+      if (linearOnX & ship.size <= 4) {
         checkAscend(ship.map(_._2))
-      } else if (linearOnY) {
+      } else if (linearOnY & ship.size <= 4) {
         checkAscend(ship.map(_._1))
       } else false
-//
-//      var q: List[String] = List()
-//      var w: List[String] = List()
-//      val c = ship(1)
-//      val g = ship.forall(y => y._1 == c._1 || y._2 == c._2)
-//      if (g)
-//        ship.foreach(x => q = x._1.toString :: q)
-//      ship.foreach(x => w = x._2.toString :: w)
-//      val q1 = q.map((q1: String) => q1.toInt).reverse
-//      val w1 = w.map((w1: String) => w1.toInt).reverse
-//      val q2 = q1.sorted
-//      val w2 = w1.sorted
-//      //            if (q1 == q2) true
-//      //            else if (w1==w2) true
-//      //            else false
-//      val e = 0
-//      val ab = q1.foldLeft(1)((m, n) => m+n)
-//      for (i<-2 to q1.size) if (i - i-1==1) true
-//      else false
+    } // определить, подходит ли корабль по своим характеристикам
+    def validatePosition(ship: Ship, field: Field): Boolean = {
 
-
-    }
-    // определить, подходит ли корабль по своим характеристикам
-
-
-    def validatePosition(ship: Ship, field: Field) = {
-
-      val newfield = field.map(row => "false" +: row :+ "false")
+      val fieldone = field.map(row => false +: row :+ false)
+      val newfield = fieldone.head +: fieldone :+ fieldone.head
 
       val (fx, fy) = ship.head
+      val lOnX: Boolean = ship.forall(c => c._1 == fx)
 
-     val shipone = newfield.dropRight(newfield.length - (fx+1)).map(row => row.dropRight(newfield.length-(fy+1)))
-      shipone
-
-//      for (x <- 0 to field.length - 1) {
-//        for (y <- 0 to field.length - 1) {
-//          print(" " + field(x)(y))
-//        }
-//        println()
-//      }
+      if (lOnX) {
+        val new1 = newfield.slice(fy, ship.length + 3).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
+        new1.forall(row => row.forall(newrow => !newrow))
+      }
+      else {
+        val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx, ship.length + 3))
+        new1.forall(row => row.forall(newrow => !newrow))
+      }
     } // определить, можно ли его поставить
-    println(validatePosition(List((1,2),(2,2),(3,2)),Lesson.field))
     def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = fleet + (name -> ship) // добавить корабль во флот
-    def markUsedCells(field: Field, ship: Ship): Field = ??? // пометить клетки, которые занимает добавляемый корабль
+    def markUsedCells(field: Field, ship: Ship): Field = {
 
-    def tryAddShip(game: Game, name: String, ship: Ship): Game = ??? // логика вызовов методов выше
+      val mutableField: Vector[Array[Boolean]] = field.map(_.toArray)
+
+      ship.foreach(c => {
+        //        val row: Array[Boolean] = mutableField(c._2)
+        //        row(c._1) = true
+        mutableField(c._2)(c._1) = true
+      })
+      val newfield = mutableField.map(_.toVector)
+      newfield
+    } // пометить клетки, которые занимает добавляемый корабль
+    def tryAddShip(game: Game, name: String, ship: Ship): Game = {
+      if (validateShip(ship)) {
+        if (validatePosition(ship, markUsedCells(game._1, ship))) {
+          val b = (markUsedCells(game._1,ship), enrichFleet(game._2,name,ship))
+          b
+        }
+        else game
+      }
+      else game
+    } // логика вызовов методов выше
   }
 }
+
