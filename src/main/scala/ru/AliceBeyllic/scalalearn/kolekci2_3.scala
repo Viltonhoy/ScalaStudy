@@ -29,14 +29,36 @@ object Lesson {
 object kolekci2_3 {
   def main(args: Array[String]) {
 
-    val vvod = LazyList.continually {
-      StdIn.readLine().split(" ")
-    }.takeWhile(_ != "END").toList
-    println(vvod)
+    val size = StdIn.readLine().toInt
+    var newgame:Naval.Game = (Lesson.field, Map())
+    for (i <- 1 to size) {
+      val name = StdIn.readLine()
+      val twoname = name.split(" ")
 
+      val vvod = LazyList.continually {
+        StdIn.readLine()
+      }.take(twoname(1).toInt).toList
 
+      val parsed: List[Naval.Point] = vvod.map { s =>
+        val split = s.split(" ")
+        (split(0).toInt, split(1).toInt)
+      }
+      newgame = tryAddShip(newgame, twoname(0), parsed)
+    }
 
+    println(newgame._2)
 
+    //    def obman(a: List[String]): List[(Int, Int)] = {
+    //      var ListTup: List[(Int, Int)] = List()
+    //      a match {
+    //        case head :: xs => {
+    //          val sm = head.split(" ")
+    //          ListTup = (sm(0).toInt, sm(1).toInt) :: ListTup
+    //          obman(xs)
+    //        }
+    //        case List() => ListTup
+    //      }
+    //    }
     import Naval.{Point, Field, Ship, Fleet, Game}
 
     def validateShip(ship: Ship): Boolean = {
@@ -87,7 +109,7 @@ object kolekci2_3 {
     def tryAddShip(game: Game, name: String, ship: Ship): Game = {
       if (validateShip(ship)) {
         if (validatePosition(ship, markUsedCells(game._1, ship))) {
-          val b = (markUsedCells(game._1,ship), enrichFleet(game._2,name,ship))
+          val b = (markUsedCells(game._1, ship), enrichFleet(game._2, name, ship))
           b
         }
         else game
