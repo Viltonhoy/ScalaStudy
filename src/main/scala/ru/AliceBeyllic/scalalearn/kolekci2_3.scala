@@ -45,8 +45,8 @@ object kolekci2_3 {
       }
       newgame = tryAddShip(newgame, twoname(0), parsed)
     }
-
-    println(newgame._2)
+    println(newgame._2.keys.mkString("\n"))
+    //println(newgame._1)
 
     //    def obman(a: List[String]): List[(Int, Int)] = {
     //      var ListTup: List[(Int, Int)] = List()
@@ -79,19 +79,24 @@ object kolekci2_3 {
     def validatePosition(ship: Ship, field: Field): Boolean = {
 
       val fieldone = field.map(row => false +: row :+ false)
-      val newfield = fieldone.head +: fieldone :+ fieldone.head
+      val newfield = Vector(false, false, false, false, false, false, false, false, false, false, false, false) +:
+        fieldone :+ Vector(false, false, false, false, false, false, false, false, false, false, false, false)
+
 
       val (fx, fy) = ship.head
       val lOnX: Boolean = ship.forall(c => c._1 == fx)
 
-      if (lOnX) {
-        val new1 = newfield.slice(fy, ship.length + 3).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
-        new1.forall(row => row.forall(newrow => !newrow))
+      if (ship.forall(c=> c._1 != 0 && c._2 != 0)) {
+        if (lOnX) {
+          val new1 = newfield.slice(fy, ship.length + 3).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
+          new1.forall(row => row.forall(newrow => !newrow))
+        }
+        else {
+          val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx, ship.length + 3))
+          new1.forall(row => row.forall(newrow => !newrow))
+        }
       }
-      else {
-        val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx, ship.length + 3))
-        new1.forall(row => row.forall(newrow => !newrow))
-      }
+      else false
     } // определить, можно ли его поставить
     def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = fleet + (name -> ship) // добавить корабль во флот
     def markUsedCells(field: Field, ship: Ship): Field = {
@@ -108,7 +113,7 @@ object kolekci2_3 {
     } // пометить клетки, которые занимает добавляемый корабль
     def tryAddShip(game: Game, name: String, ship: Ship): Game = {
       if (validateShip(ship)) {
-        if (validatePosition(ship, markUsedCells(game._1, ship))) {
+        if (validatePosition(ship, game._1)) {
           val b = (markUsedCells(game._1, ship), enrichFleet(game._2, name, ship))
           b
         }
