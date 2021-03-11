@@ -6,7 +6,9 @@ object testter {
 
   def main(args: Array[String]): Unit = {
 
-    def validatePosition(ship: Ship, field: Field): Boolean = {
+    println(validatePosition(List((6, 1), (7, 1), (8, 1),(9, 1)), Lesson.field).mkString("\n"))
+
+    def validatePosition(ship: Ship, field: Field) = {
 
       val fieldone = field.map(row => false +: row :+ false)
       val newfield = fieldone.head +: fieldone :+ fieldone.head
@@ -14,21 +16,19 @@ object testter {
       val (fx, fy) = ship.head
       val lOnX: Boolean = ship.forall(c => c._1 == fx)
 
-      if (ship.forall(c=> c._1 != 0 && c._2 != 0)) {
+      if (ship.forall(c => c._1 != 0 && c._2 != 0)) {
         if (lOnX) {
-          val new1 = newfield.slice(fy, ship.length + 3).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
-          new1.forall(row => row.forall(newrow => !newrow))
+          val new1 = newfield.slice(fy - 1, ship.last._2 + 2).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
+          new1
         }
         else {
-          val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx, ship.length + 3))
-          new1.forall(row => row.forall(newrow => !newrow))
+          val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx-1, ship.last._1 + 2))
+          new1
         }
       }
-      else false
+      else None
     } // определить, можно ли его поставить
 
-    println(validatePosition(List((1,6),(1,7),(1,8)),Lesson.field))
-    println(validatePosition(List((0,0),(1,0),(2,2)),Lesson.field))
 
   }
 }

@@ -30,7 +30,7 @@ object kolekci2_3 {
   def main(args: Array[String]) {
 
     val size = StdIn.readLine().toInt
-    var newgame:Naval.Game = (Lesson.field, Map())
+    var newgame: Naval.Game = (Lesson.field, Map())
     for (i <- 1 to size) {
       val name = StdIn.readLine()
       val twoname = name.split(" ")
@@ -46,19 +46,8 @@ object kolekci2_3 {
       newgame = tryAddShip(newgame, twoname(0), parsed)
     }
     println(newgame._2.keys.mkString("\n"))
-    //println(newgame._1)
+    //println(newgame._1.mkString(" \n "))
 
-    //    def obman(a: List[String]): List[(Int, Int)] = {
-    //      var ListTup: List[(Int, Int)] = List()
-    //      a match {
-    //        case head :: xs => {
-    //          val sm = head.split(" ")
-    //          ListTup = (sm(0).toInt, sm(1).toInt) :: ListTup
-    //          obman(xs)
-    //        }
-    //        case List() => ListTup
-    //      }
-    //    }
     import Naval.{Point, Field, Ship, Fleet, Game}
 
     def validateShip(ship: Ship): Boolean = {
@@ -86,19 +75,19 @@ object kolekci2_3 {
       val (fx, fy) = ship.head
       val lOnX: Boolean = ship.forall(c => c._1 == fx)
 
-      if (ship.forall(c=> c._1 != 0 && c._2 != 0)) {
+      if (ship.forall(c => c._1 != 0 && c._2 != 0)) {
         if (lOnX) {
-          val new1 = newfield.slice(fy, ship.length + 3).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
+          val new1 = newfield.slice(fy - 1, ship.last._2 + 2).map(row => row.drop(fx - 1).dropRight(row.size - (fx + 2)))
           new1.forall(row => row.forall(newrow => !newrow))
         }
         else {
-          val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx, ship.length + 3))
+          val new1 = newfield.drop(fy - 1).dropRight(newfield.size - (fy + 2)).map(row => row.slice(fx-1, ship.last._1 + 2))
           new1.forall(row => row.forall(newrow => !newrow))
         }
       }
       else false
     } // определить, можно ли его поставить
-    def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = fleet + (name -> ship) // добавить корабль во флот
+    def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = fleet + (name -> ship)// добавить корабль во флот
     def markUsedCells(field: Field, ship: Ship): Field = {
 
       val mutableField: Vector[Array[Boolean]] = field.map(_.toArray)
@@ -106,7 +95,7 @@ object kolekci2_3 {
       ship.foreach(c => {
         //        val row: Array[Boolean] = mutableField(c._2)
         //        row(c._1) = true
-        mutableField(c._2)(c._1) = true
+        mutableField(c._2 - 1)(c._1 - 1) = true
       })
       val newfield = mutableField.map(_.toVector)
       newfield
