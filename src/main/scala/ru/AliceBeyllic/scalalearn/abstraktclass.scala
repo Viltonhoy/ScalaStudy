@@ -1,6 +1,6 @@
 package ru.AliceBeyllic.scalalearn
 
-import scala.io.StdIn
+import scala.util.matching.Regex
 
 object abstraktclass {
 
@@ -9,25 +9,32 @@ object abstraktclass {
   }
 
   def main(args: Array[String]): Unit = {
-    val Str = StdIn.readLine()
-    val tokenDeleter:StringProcessor = new TiokenDeleter
-    tokenDeleter.process(Str)
-
-    val shortener = new // ???
-
-    val toLowerConvertor = new
-  }
-
-  class TiokenDeleter extends StringProcessor {
-
-    override def process(input: String): String = {
-      val newinput = input.filter(c=> c != '.')
-      newinput
+    val tokenDeleter = new StringProcessor {
+      override def process(input: String): String = {
+        val newinput = input.filterNot(c=> c == '.' ||c == ',' ||c == '!' ||c == '?' ||c == ':' ||c == ';')
+        newinput
+      }
     }
 
+    val shortener = new StringProcessor {
+      override def process(input: String): String = {
+        var newinput = ""
+        if (input.length > 20) {
+        newinput = input.dropRight(input.length-20)
+      }
+        newinput
+      }
+    }
 
+    val toLowerConvertor = new StringProcessor {
+      override def process(input: String): String = {
+        val nameOnly: Regex = "([A-Z]+)$".r
+        val result2 = input match {
+          case  nameOnly(name) => name
+
+        }
+        result2
+      }
+    }
   }
-
-
-
 }
