@@ -6,20 +6,10 @@ object FacedString {
   def apply(input: String) = s"*_*$input*_*"
 
   def unapply(arg: String): Option[String] = {
-
-    if (arg.startsWith("*_*")) {
-
-
-
-    }
-    //arg.endsWith("*_*")
-
-    //    val stringArray: Array[String] = arg.split("_")
-//    if (stringArray(1).substring(1, stringArray.length-1 ).startsWith("*") ||
-//      stringArray(1).substring(1, stringArray.length-1 ).isEmpty)  None
-//    else Some (stringArray(1).substring(1,stringArray(1).length-1))
-
-
+    var list = ""
+    if (arg.startsWith("*_*") && arg.endsWith("*_*"))
+      Some(arg.substring(3, arg.length - 3))
+    else None
   }
 }
 
