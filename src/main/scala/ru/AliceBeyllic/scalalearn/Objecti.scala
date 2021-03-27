@@ -1,6 +1,6 @@
 package ru.AliceBeyllic.scalalearn
 
-class Point(x: Double, y: Double, z: Double)
+case class Point(x: Double, y: Double, z: Double)
 
 object Point {
 
@@ -9,23 +9,19 @@ object Point {
   }
 
   def average (list:List[Point]):Point = {
-    var x = 0
-    var y = 0
-    var z = 0
-    list match  {
-
-      case a :: as => {
-
-      }
-      case List() => Point (x,y,z)
-
-//        val x = 0.0
-//        val y = 0.0
-//        val z = 0.0
-//        val xs = list.unzip
-//        println(xs._1)
+    if (list.isEmpty) Point.apply(0.0,0.0,0.0)
+    else {
+      val (xs: List[Double], ys, zs) = list.unzip3(p => (p.x, p.y, p.z))
+      val x = xs.sum / xs.size
+      val y = ys.sum / ys.size
+      val z = zs.sum / zs.size
+      Point.apply(x, y, z)
     }
-    }
+  }
+
+  def show(point: Point):String = {
+    point.x.toString + " " + point.y.toString + " " + point.z.toString + " "
+  }
 
 
   }

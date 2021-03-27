@@ -1,16 +1,26 @@
 package ru.AliceBeyllic.scalalearn
 
-import ru.AliceBeyllic.scalalearn.Naval.{Field, Ship}
-
 object testter {
-  def main (args: Array[String]):Unit ={
+  import scala.util.Random
 
-    val nums = List(2,5,1,7,4)
-    val nums2 = nums.flatMap(x => 1 to x)
-    val nums21 = for(x <- nums; y<-1 to x)yield y*2
-   println(nums2)
-    println(nums21)
+  object CustomerID {
+    def main(args: Array[String]): Unit = {
+
+      val customer1ID = CustomerID("Sukyoung")  // Sukyoung--23098234908
+      customer1ID match {
+        case CustomerID(name) => println(name)  // выведет Sukyoung
+        case _ => println("Could not extract a CustomerID")
+      }
+    }
+    def apply(name: String) = s"$name--${Random.nextLong}"
+
+    def unapply(customerID: String): Option[String] = {
+      val stringArray: Array[String] = customerID.split("--")
+      if (stringArray.tail.nonEmpty) Some(stringArray.head) else None
+    }
   }
+
+
 //  def main(args: Array[String]): Unit = {
 //
 //    println(validatePosition(List((6, 1), (7, 1), (8, 1),(9, 1)), Lesson.field).mkString("\n"))

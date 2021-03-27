@@ -9,6 +9,8 @@ object abstraktclass {
   }
 
   def main(args: Array[String]): Unit = {
+
+
     val tokenDeleter = new StringProcessor {
       override def process(input: String): String = {
         val newinput = input.filterNot(c=> c == '.' ||c == ',' ||c == '!' ||c == '?' ||c == ':' ||c == ';')
@@ -18,22 +20,15 @@ object abstraktclass {
 
     val shortener = new StringProcessor {
       override def process(input: String): String = {
-        var newinput = ""
         if (input.length > 20) {
-        newinput = input.dropRight(input.length-20)
-      }
-        newinput
+         input.dropRight(input.length-20) + "..."
+      } else input
       }
     }
 
     val toLowerConvertor = new StringProcessor {
       override def process(input: String): String = {
-        val nameOnly: Regex = "([A-Z]+)$".r
-        val result2 = input match {
-          case  nameOnly(name) => name
-
-        }
-        result2
+        input.toLowerCase
       }
     }
   }
