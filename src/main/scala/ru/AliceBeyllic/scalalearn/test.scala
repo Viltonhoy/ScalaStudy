@@ -1,15 +1,30 @@
 package ru.AliceBeyllic.scalalearn
 
-object Numbers extends App {
+object Numbers {
 
-  import scala.math.BigDecimal.RoundingMode.HALF_UP
+  abstract class Foo {
+    val a = 10 
+    protected class Bar(bar1: Int) {
+      private[this] val bar2: Boolean = true
+    }
 
-  def crispsWeight(weight: BigDecimal, potatoWaterRatio: Double, crispsWaterRatio: Double): BigDecimal = {
-    val x = (weight * BigDecimal(crispsWaterRatio) / BigDecimal(potatoWaterRatio)).setScale(5, HALF_UP)
-    x
+    val foo1 = new Bar(20)                  // 1
+    final val foo2: Int = 30
+    val foo3 = foo1.bar2                    // 2
   }
 
-    require(
-      crispsWeight(90.0, 0.9, 0.1) == BigDecimal(10.00000)
-    )
+  class Qux extends Foo {
+    override val foo1 = new Bar(200)        // 3
+    val foo2: Int = 300                     // 4
+  }
+
+  val a = new Foo
+  new a.Bar                                 // 5
+  a.foo1                                    // 6
+  a.foo1.bar1                               // 7
+  a.foo2                                    // 8
+
+  val b = new Qux
+  b.foo1                                    // 9
+
 }
